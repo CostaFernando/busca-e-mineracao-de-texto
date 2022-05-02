@@ -6,5 +6,6 @@ Este repositório contém todos os trabalhos do curso. Eles estão organizados n
 
 Projetos:
 
-- Processamento de XML: projects/xml.
-- Aprendizado da Detecção de Codificação: projects/detecting-code-pages.
+- Processamento de XML: projects/xml
+- Aprendizado da Detecção de Codificação: projects/detecting-code-pages
+- Sistema de recuperação com Modelo Vetorial: projects/ir-vector-space-model
