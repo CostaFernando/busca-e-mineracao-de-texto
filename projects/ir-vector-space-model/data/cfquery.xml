@@ -5,7 +5,7 @@
 		<QueryNumber>00001</QueryNumber>
 		<QueryText>What are the effects of calcium on the physical properties of mucus
    from CF patients? 
-		</QueryText>
+</QueryText>
 		<Results>00034</Results>
 		<Records>
 			<Item score="1222">139</Item>
@@ -48,7 +48,7 @@
 		<QueryNumber>00002</QueryNumber>
 		<QueryText>Can one distinguish between the effects of mucus hypersecretion and
    infection on the submucosal glands of the respiratory tract in CF?
-		</QueryText>
+</QueryText>
 		<Results>00007</Results>
 		<Records>
 			<Item score="1000">169</Item>
