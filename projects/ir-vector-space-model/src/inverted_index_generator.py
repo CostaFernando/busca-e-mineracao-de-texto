@@ -41,5 +41,3 @@ def get_records_from_cf_files(cf_files):
       records.append({"number": record_number, "text": record_text})
 
   return records
-
-generate_inverted_index("gli.cfg")
