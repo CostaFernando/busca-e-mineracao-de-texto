@@ -9,3 +9,4 @@ Os módulos estão na pasta /src.
 - Processador de Consultas (query_processor.py): Processa as queries originais do arquivo cfquery.xml em dois arquivos csv.
 - Gerador Lista Invertida (inverted_index_generator.py): Gera um índice invertido em csv a partir de leitura full text de um conjunto de documentos cf[id].xml.
 - Indexador (indexer.py): Gera uma matrix termo-documento com pesos TF-IDF em csv a partir de um arquivo csv de índice invertido.
+- Buscador (search_engine.py): Gera um arquivo csv contendo os resultados rankeados de cada uma das buscas presentes no arquivo de buscas.
