@@ -3,11 +3,15 @@ import xml.etree.ElementTree as ET
 import re
 
 def generate_inverted_index(config_file):
+  print("Reading config files...")
   config_dict = read_config_file(config_file)
   cf_files = config_dict["leia"].split(',')
 
+  print("Reading cf files...")
   records = get_records_from_cf_files(cf_files)
+  print(f"There are {len(records)} records.")
   
+  print("Computing inverted index...")
   inverted_index = {}
   for record in records:
     for word in re.findall(r'\w+', record["text"]):
@@ -15,10 +19,14 @@ def generate_inverted_index(config_file):
         inverted_index[word].append(record["number"])
       else:
         inverted_index[word] = [record["number"]]
+  print(f"Terms in inverted index: {len(inverted_index)}.")
   
+  print("Creating inverted index file...")
   header = ["Word", "RecordNum"]
   expected_results_file = config_dict["escreva"]
   create_csv_file(expected_results_file, header, inverted_index.items())
+
+  print("Done!")
 
 def get_records_from_cf_files(cf_files):
   records = []

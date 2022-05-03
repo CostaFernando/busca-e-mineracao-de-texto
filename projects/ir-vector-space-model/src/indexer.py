@@ -3,19 +3,26 @@ import numpy as np
 from utils import read_config_file
 
 def index_documents(config_file):
+  print("Reading config files...")
   config_dict = read_config_file(config_file)
   inverted_index_file = config_dict["leia"]
   term_document_matrix_file = config_dict["escreva"]
 
+  print("Reading inverted index file...")
   inverted_index_df = pd.read_csv(inverted_index_file, sep=';')
 
   records_num = get_records_num_set(inverted_index_df)
   words = inverted_index_df["Word"].tolist()
+  print(f"Inverted index dimensions: ({len(words)},{len(records_num)}).")
 
+  print("Computing terms-documents matrix from inverted index...")
   term_document_matrix = compute_term_document_matrix(inverted_index_df, records_num)
 
+  print("Creating terms-documents matrix file...")
   term_document_df = pd.DataFrame(data=term_document_matrix, index=words, columns=records_num)
   term_document_df.to_csv(term_document_matrix_file, sep=";")
+
+  print("Done!")
 
 def get_records_num_set(inverted_index_df):
   inverted_index_df["RecordNum"] = inverted_index_df["RecordNum"].str.replace("'", "")

@@ -48,5 +48,3 @@ def get_queries_scored_results_data(term_document_matrix_df, queries_df):
       queries_scored_results_data.append([query_number, [j, *query_result]])
 
   return queries_scored_results_data
-
-execute_queries_on_index("../config/busca.cfg")
