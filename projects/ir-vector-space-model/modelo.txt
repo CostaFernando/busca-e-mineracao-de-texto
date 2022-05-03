@@ -1,0 +1,5 @@
+O modelo utilizado é baseado na matriz termos-documentos obtida por indexação full text nos campos ABSTRACT ou EXTRACT dos documentos. 
+Nas linhas estão os termos, nas colunas estão os ids dos documentos e nas células estão os pesos de cada termo no documento.
+Os pesos são calculados usando TF-IDF.
+
+Para calcular a similaridade entre a busca e os documentos, utiliza-se o Produto Interno dos vetores da busca e de cada documento.
