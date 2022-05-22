@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from utils import read_config_file
+from numpy import linalg as LA
 
 def index_documents(config_file):
   print("Reading config files...")
@@ -37,12 +38,14 @@ def compute_term_document_matrix(inverted_index_df, records_num):
   for record_num in records_num:
     terms_frequencies.append(inverted_index_df["RecordNum"].str.count(record_num))
 
+  # Tf-Idf implementation based on ScikitLearn: https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting
   terms_frequencies = np.array(terms_frequencies).T
 
   number_of_documents = terms_frequencies.shape[-1]
   terms_occurence_on_documents = np.sum(np.where(terms_frequencies > 0, 1, 0), axis=1)
-  terms_idf = np.log(number_of_documents/terms_occurence_on_documents).reshape((terms_occurence_on_documents.shape[0], 1))
+  terms_idf = (np.log((1 + number_of_documents)/(1 + terms_occurence_on_documents)) + 1).reshape((terms_occurence_on_documents.shape[0], 1))
 
   term_document_matrix = terms_frequencies * terms_idf
+  term_document_matrix = term_document_matrix / LA.norm(term_document_matrix, axis=0)
 
   return term_document_matrix

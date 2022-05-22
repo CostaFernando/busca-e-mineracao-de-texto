@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE FILE SYSTEM "cfc-2.dtd">
+<FILE>
+	<RECORD>
+		<RECORDNUM>00001</RECORDNUM>
+		<ABSTRACT>We are good</ABSTRACT>
+	</RECORD>
+	<RECORD>
+		<RECORDNUM>00002</RECORDNUM>
+		<ABSTRACT>We are becoming better</ABSTRACT>
+	</RECORD>
+	<RECORD>
+		<RECORDNUM>00003</RECORDNUM>
+		<ABSTRACT>We will be great</ABSTRACT>
+	</RECORD>
+</FILE>
