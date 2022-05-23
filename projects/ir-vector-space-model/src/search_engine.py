@@ -2,6 +2,7 @@ from utils import read_config_file
 import pandas as pd
 import numpy as np
 import re
+from numpy import linalg as LA
 
 def execute_queries_on_index(config_file):
   print("Reading config files...")
@@ -26,24 +27,36 @@ def execute_queries_on_index(config_file):
   print("Done!")
 
 def get_queries_scored_results_data(term_document_matrix_df, queries_df):
-  def get_queries_scored_results(query_text):
-    number_of_documents = len(term_document_matrix_df.columns)
-    scored_results = np.zeros(number_of_documents)
+  def get_queries_vectors(query_text):
+    number_of_words = len(term_document_matrix_df.index)
+    query_vector = np.zeros(number_of_words)
 
     for word in re.findall(r'\w+', query_text):
-      if word in term_document_matrix_df.index:
-        scored_results += term_document_matrix_df.loc[word].values
+      word_index = np.flatnonzero(term_document_matrix_df.index == word)
+      query_vector[word_index] = 1
 
-    return scored_results
+    query_vector = query_vector / LA.norm(query_vector)
 
-  queries_scored_results = queries_df["QueryText"].apply(get_queries_scored_results)
+    return query_vector
+
+  queries_vectors = queries_df["QueryText"].apply(get_queries_vectors)
 
   queries_scored_results_data = []
-  for i, query_scored_results in enumerate(queries_scored_results):
-    query_number = queries_df.index.values[i]
-    query_results = [(term_document_matrix_df.columns[j], scored_result) for j, scored_result in enumerate(query_scored_results)]
-    query_results = sorted(query_results, key=lambda tup: tup[1], reverse=True)
+  term_document_matrix = term_document_matrix_df.values
+  queries_vectors = queries_vectors.tolist()
+  # vectors are normalized, so dot product is the same as cosine similarity
+  queries_documents_similarities = np.dot(queries_vectors, term_document_matrix)
 
+  for i, query_documents_similarities in enumerate(queries_documents_similarities):
+    query_number = queries_df.index.values[i]
+    query_results = []
+
+    for j, query_document_similarity in enumerate(query_documents_similarities):
+      if query_document_similarity > 0:
+        document_number = term_document_matrix_df.columns[j]
+        query_results.append((document_number, query_document_similarity))
+
+    query_results = sorted(query_results, key=lambda tup: tup[1], reverse=True)
     for j, query_result in enumerate(query_results):
       queries_scored_results_data.append([query_number, [j, *query_result]])
 
