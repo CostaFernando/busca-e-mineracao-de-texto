@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import re
 from numpy import linalg as LA
+from nltk.stem import *
 
 def execute_queries_on_index(config_file):
   print("Reading config files...")
@@ -10,15 +11,16 @@ def execute_queries_on_index(config_file):
   term_document_matrix_file = config_dict["modelo"]
   queries_file = config_dict["consultas"]
   queries_results_file = config_dict["resultados"]
+  use_stemmer = bool(int(config_dict["use_stemmer"]))
 
   print("Reading model and queries files...")
-  term_document_matrix_df = pd.read_csv(term_document_matrix_file, sep=';', index_col=0)
+  term_document_matrix_df = pd.read_csv(term_document_matrix_file, sep=';', index_col=0, na_filter = False)
   print(f"terms-documents matrix has the following dimensions: ({len(term_document_matrix_df)},{len(term_document_matrix_df.columns)}).")
   queries_df = pd.read_csv(queries_file, sep=';', index_col=0)
   print(f"There are {len(queries_df)} queries.")
 
   print("Computing queries docs scores...")
-  queries_scored_results_data= get_queries_scored_results_data(term_document_matrix_df, queries_df)
+  queries_scored_results_data= get_queries_scored_results_data(term_document_matrix_df, queries_df, use_stemmer)
   
   print("Saving queries results...")
   queries_scored_results_df = pd.DataFrame(data=queries_scored_results_data, columns=["QueryNumber", "Results"])
@@ -26,13 +28,22 @@ def execute_queries_on_index(config_file):
 
   print("Done!")
 
-def get_queries_scored_results_data(term_document_matrix_df, queries_df):
+def get_queries_scored_results_data(term_document_matrix_df, queries_df, use_stemmer=False):
+  ps = PorterStemmer()
+  terms_on_index = term_document_matrix_df.index
+
   def get_queries_vectors(query_text):
-    number_of_words = len(term_document_matrix_df.index)
+    number_of_words = len(terms_on_index)
     query_vector = np.zeros(number_of_words)
 
     for word in re.findall(r'\w+', query_text):
-      word_index = np.flatnonzero(term_document_matrix_df.index == word)
+      if len(word) < 2:
+        continue
+
+      if use_stemmer:
+        word = ps.stem(word)
+        
+      word_index = np.flatnonzero(terms_on_index == word)
       query_vector[word_index] = 1
 
     query_vector = query_vector / LA.norm(query_vector)

@@ -1,11 +1,14 @@
 from utils import read_config_file, process_string, create_csv_file
 import xml.etree.ElementTree as ET
 import re
+from nltk.stem import *
 
 def generate_inverted_index(config_file):
   print("Reading config files...")
   config_dict = read_config_file(config_file)
   cf_files = config_dict["leia"].split(',')
+  use_stemmer = bool(int(config_dict["use_stemmer"]))
+  ps = PorterStemmer()
 
   print("Reading cf files...")
   records = get_records_from_cf_files(cf_files)
@@ -14,7 +17,13 @@ def generate_inverted_index(config_file):
   print("Computing inverted index...")
   inverted_index = {}
   for record in records:
-    for word in re.findall(r'\w+', record["text"]):
+    for word in re.findall(r'[a-zA-Z]+', record["text"]):
+      if len(word) < 2:
+        continue
+
+      if use_stemmer:
+        word = ps.stem(word)
+
       if word in inverted_index:
         inverted_index[word].append(record["number"])
       else:

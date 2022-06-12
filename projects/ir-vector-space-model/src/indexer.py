@@ -10,7 +10,7 @@ def index_documents(config_file):
   term_document_matrix_file = config_dict["escreva"]
 
   print("Reading inverted index file...")
-  inverted_index_df = pd.read_csv(inverted_index_file, sep=';')
+  inverted_index_df = pd.read_csv(inverted_index_file, sep=';', na_filter = False)
 
   records_num = get_records_num_set(inverted_index_df)
   words = inverted_index_df["Word"].tolist()
